@@ -1,0 +1,26 @@
+.wrapper {
+  display: grid;
+  grid-template-rows: 2fr 1fr;
+  grid-template-columns: 1fr 1fr;
+}
+
+.wrapper * {
+  border: 1px;
+  border-color: aliceblue;
+  border-style: solid;
+}
+
+.icon {
+  grid-column: 1 / 3;
+  grid-row: 1;
+}
+
+.quantity {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+.unit {
+  grid-column: 2;
+  grid-row: 2;
+}

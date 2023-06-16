@@ -1,95 +1,134 @@
-import Image from 'next/image'
-import styles from './page.module.css'
+"use client";
+import Image from "next/image";
+import utilStyles from "./page.module.css";
+import RecipeStage from "../../components/RecipeStage";
+import { toIPS, inputFor, toUnit } from "../../domain/Calculations";
+import { useState } from "react";
+
+// @TODO: read up on Typescript and change the file extensions accordingly
+// @TODO: clean up the object.attribute vs object["attribute"] references
+// @TODO: couple the stages so that input changes cascade all the way through
+
+const DEFAULT_STAGE0 = {
+  item: "Automation_science_pack",
+  IPS: 10,
+  displayUnit: "IPS",
+  id: "0",
+};
 
 export default function Home() {
+  // **** Hook definitions and custom functions
+  const [stages, setStages] = useState([DEFAULT_STAGE0]);
+  function setStage0Unit(newDisplayUnit) {
+    setStages([
+      {
+        ...stages[0],
+        displayUnit: newDisplayUnit,
+      },
+      ...stages.slice(1),
+    ]);
+  }
+  function setStage0Quantity(e) {
+    setStages([
+      {
+        ...stages[0],
+        IPS: toIPS(e.target.value, stages[0].displayUnit),
+      },
+      ...stages.slice(1),
+    ]);
+  }
+  function addStage(newStage) {
+    // make sure a stage with this id is not already present
+    if (!stages.find((stage) => stage.id === newStage.id)) {
+      setStages([...stages, newStage]);
+    }
+  }
+  function deleteStage(id) {
+    setStages(stages.filter((stage) => stage.id !== id));
+  }
+  const stageList = stages.map((stage, i) => (
+    <RecipeStage
+      item={stage["item"]}
+      IPS={stage["IPS"]}
+      displayUnit={stage["displayUnit"]}
+      showCancel={i !== 0}
+      key={stage["id"]}
+      addStage={addStage}
+      deleteStage={deleteStage}
+    />
+  ));
+
+  // **** Contents of the site
+  const targetIconSize = 48;
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
+    <main className={utilStyles.main}>
+      <div className={utilStyles.endbars}>
+        <p>Top endbar - fixed</p>
+      </div>
+
+      <div className={utilStyles.pageContent}>
+        <div className={utilStyles.recipeDemand}>
+          <h1>TARGET PRODUCTION</h1>
+          <div className={utilStyles.recipeDemandInput}>
+            {/* @TODO: implement UI to change the target item */}
             <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
+              src={`/factorio-assets/${stages[0]["item"]}.png`}
+              alt={stages[0]["item"]}
+              className={`${utilStyles.recipeDemandIcon} ${utilStyles.iconClickable}`}
+              width={targetIconSize}
+              height={targetIconSize}
             />
-          </a>
+            <form>
+              <input
+                type="text"
+                className={utilStyles.recipeDemandQuantity}
+                defaultValue={toUnit(
+                  stages[0]["displayUnit"],
+                  stages[0]["IPS"]
+                )}
+                onChange={(e) => {
+                  setStage0Quantity(e);
+                }}
+              />
+            </form>
+            {/* @TODO: implement "activated" and "not active" states visually
+            by conditionally applying an appropriate class?
+            Or maybe look up how a similar thing with <a::clicked> is implemented? */}
+            <Image
+              src="/IPS.png"
+              alt="items/s"
+              className={utilStyles.iconClickable}
+              width={targetIconSize}
+              height={targetIconSize}
+              onClick={() => {
+                setStage0Unit("IPS");
+              }}
+            />
+            <Image
+              src="/factorio-assets/Transport_belt.png"
+              alt="Transport belt"
+              className={utilStyles.iconClickable}
+              width={targetIconSize}
+              height={targetIconSize}
+              onClick={() => {
+                setStage0Unit("Transport_belt");
+              }}
+            />
+          </div>
+        </div>
+
+        <div className={utilStyles.recipeResults}>
+          <div>&nbsp;</div>
+          <div>item</div>
+          <div>factories</div>
+          <div>input</div>
+          {stageList}
         </div>
       </div>
 
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore the Next.js 13 playground.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
+      <div className={utilStyles.endbars}>
+        <p>Bottom endbar - fixed</p>
       </div>
     </main>
-  )
+  );
 }
