@@ -7,7 +7,7 @@ import { toFactories, inputFor } from "../domain/Calculations";
 
 function RecipeStage(props) {
   // A RecipeStage effectively corresponds to a row in the table of results
-  const input = inputFor(props["IPS"], props["item"]);
+  const input = props.input;
   return (
     <>
       <div>
