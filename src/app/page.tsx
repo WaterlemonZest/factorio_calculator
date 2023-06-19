@@ -9,7 +9,7 @@ import { useState } from "react";
 // @TODO: clean up the object.attribute vs object["attribute"] references
 // @TODO: couple the stages so that input changes cascade all the way through
 
-const DEFAULT_ITEM = "Automation_science_pack";
+const DEFAULT_ITEM = "Logistic_science_pack";
 const DEFAULT_IPS = 10;
 const DEFAULT_STAGE0 = {
   item: DEFAULT_ITEM,

@@ -12,6 +12,44 @@ const RECIPES = {
     seconds: 0.5,
     input: [["Iron_plate", 2]],
   },
+  Transport_belt: {
+    yields: 2,
+    seconds: 0.5,
+    input: [
+      ["Iron_gear_wheel", 1],
+      ["Iron_plate", 1],
+    ],
+  },
+  Copper_cable: {
+    yields: 2,
+    seconds: 0.5,
+    input: [["Copper_plate", 1]],
+  },
+  Electronic_circuit: {
+    yields: 1,
+    seconds: 0.5,
+    input: [
+      ["Copper_cable", 3],
+      ["Iron_plate", 1],
+    ],
+  },
+  Inserter: {
+    yields: 1,
+    seconds: 0.5,
+    input: [
+      ["Electronic_circuit", 1],
+      ["Iron_gear_wheel", 1],
+      ["Iron_plate", 1],
+    ],
+  },
+  Logistic_science_pack: {
+    yields: 1,
+    seconds: 6,
+    input: [
+      ["Inserter", 1],
+      ["Transport_belt", 1],
+    ],
+  },
 };
 export function inputFor(IPS, item) {
   if (!RECIPES.hasOwnProperty(item))
