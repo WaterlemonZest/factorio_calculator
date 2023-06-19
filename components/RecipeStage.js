@@ -3,7 +3,7 @@ import Image from "next/image";
 import utilStyles from "../src/app/page.module.css";
 import styles from "./RecipeStage.module.css";
 import RecipeItem from "./RecipeItem";
-import { toFactories, inputFor } from "../domain/Calculations";
+import { toFactories } from "../domain/Calculations";
 
 function RecipeStage(props) {
   // A RecipeStage effectively corresponds to a row in the table of results
@@ -42,6 +42,7 @@ function RecipeStage(props) {
               IPS={elem.IPS}
               displayUnit="IPS"
               clickable={elem.sub_recipe}
+              id={`${props["id"]}-${i}`}
               key={`${props["id"]}-${i}`}
               addStage={props["addStage"]}
             />

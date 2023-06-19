@@ -22,23 +22,41 @@ const DEFAULT_STAGE0 = {
 export default function Home() {
   // **** Hook definitions and custom functions
   const [stages, setStages] = useState([DEFAULT_STAGE0]);
+  function rescaleStages(scale) {
+    let rescaledStages = [];
+    for (const stage of stages) {
+      rescaledStages.push({
+        ...stage,
+        IPS: stage.IPS * scale,
+        input: stage.input.map((elem) => {
+          return { ...elem, IPS: elem.IPS * scale };
+        }),
+      });
+    }
+    return rescaledStages;
+  }
   function setStage0Unit(newDisplayUnit) {
-    setStages([
-      {
-        ...stages[0],
-        displayUnit: newDisplayUnit,
-      },
-      ...stages.slice(1),
-    ]);
+    const scale = toIPS(1, newDisplayUnit) / toIPS(1, stages[0].displayUnit);
+    const rescaledStages = rescaleStages(scale);
+    const updatedStages = rescaledStages.map((stage, i) => {
+      if (i === 0) {
+        //console.log("Creating new stage");
+        return { ...stage, displayUnit: newDisplayUnit };
+      }
+      return stage;
+    });
+    setStages(updatedStages);
+    //rescaleStages(scale);
   }
   function setStage0Quantity(e) {
-    setStages([
-      {
-        ...stages[0],
-        IPS: toIPS(e.target.value, stages[0].displayUnit),
-      },
-      ...stages.slice(1),
-    ]);
+    if (!e.target.value || Number(e.target.value) === 0) {
+      // Prevent the user from setting a 0 value
+      // because then recipe rescaling breaks
+      return;
+    }
+    const newIPS = toIPS(e.target.value, stages[0].displayUnit);
+    const scale = newIPS / stages[0].IPS;
+    setStages(rescaleStages(scale));
   }
   function addStage(newStage) {
     // make sure a stage with this id is not already present
@@ -48,7 +66,6 @@ export default function Home() {
     }
   }
   function deleteStage(id) {
-    ``;
     setStages(stages.filter((stage) => stage.id !== id));
   }
   const stageList = stages.map((stage, i) => (
@@ -58,6 +75,7 @@ export default function Home() {
       displayUnit={stage["displayUnit"]}
       input={stage["input"]}
       showCancel={i !== 0}
+      id={stage["id"]}
       key={stage["id"]}
       addStage={addStage}
       deleteStage={deleteStage}
@@ -86,7 +104,7 @@ export default function Home() {
             />
             <form>
               <input
-                type="text"
+                type="number"
                 className={utilStyles.recipeDemandQuantity}
                 defaultValue={toUnit(
                   stages[0]["displayUnit"],
@@ -138,3 +156,10 @@ export default function Home() {
     </main>
   );
 }
+
+/*
+const [stages, setStage] = useState([{IPS: 10, unit: "IPS"}])
+function setStage0Unit(newUnit) {
+  setStage()
+}
+*/
