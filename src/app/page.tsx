@@ -9,16 +9,19 @@ import { useState } from "react";
 // @TODO: clean up the object.attribute vs object["attribute"] references
 // @TODO: couple the stages so that input changes cascade all the way through
 
+const DEFAULT_ITEM = "Automation_science_pack";
+const DEFAULT_IPS = 10;
 const DEFAULT_STAGE0 = {
-  item: "Automation_science_pack",
-  IPS: 10,
+  item: DEFAULT_ITEM,
+  IPS: DEFAULT_IPS,
   displayUnit: "IPS",
   id: "0",
+  input: inputFor(DEFAULT_IPS, DEFAULT_ITEM),
 };
 
 export default function Home() {
   // **** Hook definitions and custom functions
-  const [stages, setStages] = useState(Array());
+  const [stages, setStages] = useState([DEFAULT_STAGE0]);
   function setStage0Unit(newDisplayUnit) {
     setStages([
       {
@@ -40,17 +43,10 @@ export default function Home() {
   function addStage(newStage) {
     // make sure a stage with this id is not already present
     if (!stages.find((stage) => stage.id === newStage.id)) {
-      console.log(`Adding a new stage to ${JSON.stringify(stages)}`);
       newStage["input"] = inputFor(newStage.IPS, newStage.item);
-      if (stages.length == 0) {
-        setStages([newStage]);
-      } else {
-        setStages([...stages, newStage]);
-      }
-      console.log(`After adding: ${JSON.stringify(stages)}`);
+      setStages([...stages, newStage]);
     }
   }
-  addStage(DEFAULT_STAGE0);
   function deleteStage(id) {
     ``;
     setStages(stages.filter((stage) => stage.id !== id));
@@ -70,7 +66,6 @@ export default function Home() {
 
   // **** Contents of the site
   const targetIconSize = 48;
-  console.log(`About to paint the website using ${JSON.stringify(stages[0])}`);
   return (
     <main className={utilStyles.main}>
       <div className={utilStyles.endbars}>
