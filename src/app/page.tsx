@@ -2,27 +2,31 @@
 import Image from "next/image";
 import utilStyles from "./page.module.css";
 import RecipeStage from "../../components/RecipeStage";
-import { toIPS, inputFor, toUnit } from "../../domain/Calculations";
-import { useState } from "react";
+import { toIPS, inputFor, toUnit, RATE_UNITS } from "../../domain/Calculations";
+import { useState, ChangeEvent } from "react";
 
-// @TODO: read up on Typescript and change the file extensions accordingly
-// @TODO: clean up the object.attribute vs object["attribute"] references
-// @TODO: couple the stages so that input changes cascade all the way through
-
-const DEFAULT_ITEM = "Logistic_science_pack";
-const DEFAULT_IPS = 10;
-const DEFAULT_STAGE0 = {
-  item: DEFAULT_ITEM,
-  IPS: DEFAULT_IPS,
+export interface Stage {
+  item: string;
+  IPS: number;
+  displayUnit: keyof typeof RATE_UNITS;
+  id: string;
+}
+const DEFAULT_STAGE0: Stage = {
+  item: "Logistic_science_pack",
+  IPS: 10,
   displayUnit: "IPS",
   id: "0",
-  input: inputFor(DEFAULT_IPS, DEFAULT_ITEM),
 };
 
 export default function Home() {
   // **** Hook definitions and custom functions
-  const [stages, setStages] = useState([DEFAULT_STAGE0]);
-  function rescaleStages(scale) {
+  const [stages, setStages] = useState([
+    {
+      ...DEFAULT_STAGE0,
+      input: inputFor(DEFAULT_STAGE0.IPS, DEFAULT_STAGE0.item),
+    },
+  ]);
+  function rescaleStages(scale: number) {
     let rescaledStages = [];
     for (const stage of stages) {
       rescaledStages.push({
@@ -35,48 +39,52 @@ export default function Home() {
     }
     return rescaledStages;
   }
-  function setStage0Unit(newDisplayUnit) {
+  function setStage0Unit(newDisplayUnit: keyof typeof RATE_UNITS) {
     const scale = toIPS(1, newDisplayUnit) / toIPS(1, stages[0].displayUnit);
     const rescaledStages = rescaleStages(scale);
     const updatedStages = rescaledStages.map((stage, i) => {
       if (i === 0) {
-        //console.log("Creating new stage");
         return { ...stage, displayUnit: newDisplayUnit };
       }
       return stage;
     });
     setStages(updatedStages);
-    //rescaleStages(scale);
   }
-  function setStage0Quantity(e) {
+  function setStage0Quantity(e: ChangeEvent<HTMLInputElement>) {
     if (!e.target.value || Number(e.target.value) === 0) {
       // Prevent the user from setting a 0 value
       // because then recipe rescaling breaks
       return;
     }
-    const newIPS = toIPS(e.target.value, stages[0].displayUnit);
+    const newIPS = toIPS(Number(e.target.value), stages[0].displayUnit);
     const scale = newIPS / stages[0].IPS;
     setStages(rescaleStages(scale));
   }
-  function addStage(newStage) {
+  function addStage(newStage: Stage) {
     // make sure a stage with this id is not already present
     if (!stages.find((stage) => stage.id === newStage.id)) {
-      newStage["input"] = inputFor(newStage.IPS, newStage.item);
-      setStages([...stages, newStage]);
+      // Declare a copy of the input object
+      // because typescript gets angry for adding a new property
+      // that is not defined in the interface
+      const newStageWithInput = {
+        ...newStage,
+        input: inputFor(newStage.IPS, newStage.item),
+      };
+      setStages([...stages, newStageWithInput]);
     }
   }
-  function deleteStage(id) {
+  function deleteStage(id: string) {
     setStages(stages.filter((stage) => stage.id !== id));
   }
   const stageList = stages.map((stage, i) => (
     <RecipeStage
-      item={stage["item"]}
-      IPS={stage["IPS"]}
-      displayUnit={stage["displayUnit"]}
-      input={stage["input"]}
+      item={stage.item}
+      IPS={stage.IPS}
+      displayUnit={stage.displayUnit}
+      input={stage.input}
       showCancel={i !== 0}
-      id={stage["id"]}
-      key={stage["id"]}
+      id={stage.id}
+      key={stage.id}
       addStage={addStage}
       deleteStage={deleteStage}
     />
@@ -96,8 +104,8 @@ export default function Home() {
           <div className={utilStyles.recipeDemandInput}>
             {/* @TODO: implement UI to change the target item */}
             <Image
-              src={`/factorio-assets/${stages[0]["item"]}.png`}
-              alt={stages[0]["item"]}
+              src={`/factorio-assets/${stages[0].item}.png`}
+              alt={stages[0].item}
               className={`${utilStyles.recipeDemandIcon} ${utilStyles.iconClickable}`}
               width={targetIconSize}
               height={targetIconSize}
@@ -106,10 +114,7 @@ export default function Home() {
               <input
                 type="number"
                 className={utilStyles.recipeDemandQuantity}
-                defaultValue={toUnit(
-                  stages[0]["displayUnit"],
-                  stages[0]["IPS"]
-                )}
+                defaultValue={toUnit(stages[0].displayUnit, stages[0].IPS)}
                 onChange={(e) => {
                   setStage0Quantity(e);
                 }}
@@ -156,10 +161,3 @@ export default function Home() {
     </main>
   );
 }
-
-/*
-const [stages, setStage] = useState([{IPS: 10, unit: "IPS"}])
-function setStage0Unit(newUnit) {
-  setStage()
-}
-*/
