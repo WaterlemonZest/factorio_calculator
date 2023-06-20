@@ -3,20 +3,36 @@ import Image from "next/image";
 import styles from "./RecipeItem.module.css";
 import utilStyles from "../src/app/page.module.css";
 import clsx from "clsx";
-import { toUnit } from "../domain/Calculations";
+import { RATE_UNITS } from "../domain/Calculations";
+import { Stage } from "../src/app/page";
 
-function RecipeItem(props) {
+interface StaticRecipeItemProps<isClickable> {
+  item: string;
+  IPS: number;
+  displayUnit: keyof typeof RATE_UNITS;
+  clickable: isClickable;
+}
+interface ExtendableRecipeItemProps<isClickable>
+  extends StaticRecipeItemProps<isClickable> {
+  id: string;
+  addStage: (newStage: Stage) => void;
+}
+type RecipeItemProps<isClickable = boolean> = isClickable extends true
+  ? ExtendableRecipeItemProps<isClickable>
+  : StaticRecipeItemProps<isClickable>;
+
+function RecipeItem(props: RecipeItemProps) {
   // A RecipeItem corresponds to a bundle of {item, quantity, unit} displayed in RecipeStage
   const iconPath = `/factorio-assets/${props.item}.png`;
   function addStage() {
     if (!props.clickable) {
-      return 0;
+      return <></>;
     }
     props.addStage({
-      item: props["item"],
-      IPS: props["IPS"],
+      item: props.item,
+      IPS: props.IPS,
       displayUnit: "IPS", // @TODO: come up with a way to put here the same unit as for Stage0 for user friendliness
-      id: props["id"],
+      id: props.id,
     });
   }
 

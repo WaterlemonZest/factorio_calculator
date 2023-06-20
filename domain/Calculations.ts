@@ -1,4 +1,10 @@
-const RECIPES = {
+interface Recipe {
+  yields: number;
+  seconds: number;
+  input: [string, number][];
+}
+
+export const RECIPES: { [key: string]: Recipe } = {
   Automation_science_pack: {
     yields: 1,
     seconds: 5,
@@ -51,11 +57,9 @@ const RECIPES = {
     ],
   },
 };
-export function inputFor(IPS, item) {
-  if (!RECIPES.hasOwnProperty(item))
-    return [{ item: item, IPS: IPS, sub_recipe: false }];
-  const yields = RECIPES[item].yields;
 
+export function inputFor(IPS: number, item: keyof typeof RECIPES) {
+  const yields = RECIPES[item].yields;
   return RECIPES[item].input.map((elem) => {
     return {
       item: elem[0],
@@ -71,20 +75,24 @@ const FACTORY_SPEEDS = {
   Assembling_machine_3: 1.25,
 };
 
-export function toFactories(IPS, item, factory) {
+export function toFactories(
+  IPS: number,
+  item: keyof typeof RECIPES,
+  factory: keyof typeof FACTORY_SPEEDS
+) {
   const yields = RECIPES[item].yields;
   const seconds = RECIPES[item].seconds;
   return (IPS * seconds) / (yields * FACTORY_SPEEDS[factory]);
 }
 
-const RATE_UNITS = {
+export const RATE_UNITS = {
   IPS: 1,
   Transport_belt: 15,
 };
 
-export function toIPS(quantity, unit) {
+export function toIPS(quantity: number, unit: keyof typeof RATE_UNITS) {
   return quantity * RATE_UNITS[unit];
 }
-export function toUnit(unit, IPS) {
+export function toUnit(unit: keyof typeof RATE_UNITS, IPS: number) {
   return IPS / RATE_UNITS[unit];
 }

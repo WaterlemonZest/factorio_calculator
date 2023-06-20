@@ -3,15 +3,23 @@ import Image from "next/image";
 import utilStyles from "../src/app/page.module.css";
 import styles from "./RecipeStage.module.css";
 import RecipeItem from "./RecipeItem";
-import { toFactories } from "../domain/Calculations";
+import { inputFor, toFactories } from "../domain/Calculations";
+import { Stage } from "../src/app/page";
 
-function RecipeStage(props) {
+interface RecipeStageProps extends Stage {
+  deleteStage: (id: string) => void;
+  addStage: (newStage: Stage) => void;
+  showCancel: boolean;
+  input: ReturnType<typeof inputFor>;
+}
+
+function RecipeStage(props: RecipeStageProps) {
   // A RecipeStage effectively corresponds to a row in the table of results
   const input = props.input;
   return (
     <>
       <div>
-        {props["showCancel"] ? (
+        {props.showCancel ? (
           <Image
             src="/Cross.png"
             alt="Delete"
@@ -28,23 +36,23 @@ function RecipeStage(props) {
       </div>
       {/* @TODO: implement the functionality of changing the unit of measurement */}
       <RecipeItem
-        item={props["item"]}
-        IPS={props["IPS"]}
+        item={props.item}
+        IPS={props.IPS}
         displayUnit="IPS"
         clickable={false}
       />
       <div>{toFactories(props.IPS, props.item, "Assembling_machine_1")}</div>
       <div className={styles.inputList}>
-        {input.map((elem, i) => {
+        {input.map((elem: (typeof input)[number], i: number) => {
           return (
             <RecipeItem
               item={elem.item}
               IPS={elem.IPS}
               displayUnit="IPS"
               clickable={elem.sub_recipe}
-              id={`${props["id"]}-${i}`}
-              key={`${props["id"]}-${i}`}
-              addStage={props["addStage"]}
+              id={`${props.id}-${i}`}
+              key={`${props.id}-${i}`}
+              addStage={props.addStage}
             />
           );
         })}
