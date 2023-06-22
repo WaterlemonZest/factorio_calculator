@@ -74,7 +74,8 @@ export default function Home() {
     }
   }
   function deleteStage(id: string) {
-    setStages(stages.filter((stage) => stage.id !== id));
+    // delete the stage and its children
+    setStages(stages.filter((stage) => !stage.id.startsWith(id)));
   }
   const stageList = stages.map((stage, i) => (
     <RecipeStage
