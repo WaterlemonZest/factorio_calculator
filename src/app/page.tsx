@@ -2,6 +2,7 @@
 import Image from "next/image";
 import utilStyles from "./page.module.css";
 import RecipeStage from "../../components/RecipeStage";
+import RecipeItem from "../../components/RecipeItem";
 import { toIPS, inputFor, toUnit, RATE_UNITS } from "../../domain/Calculations";
 import { useState, ChangeEvent } from "react";
 
@@ -17,6 +18,8 @@ const DEFAULT_STAGE0: Stage = {
   displayUnit: "IPS",
   id: "0",
 };
+export type AddStageSignature = { (newStage: Stage): void };
+export type DeleteStageSignature = { (id: string): void };
 
 export default function Home() {
   // **** Hook definitions and custom functions
@@ -60,7 +63,7 @@ export default function Home() {
     const scale = newIPS / stages[0].IPS;
     setStages(rescaleStages(scale));
   }
-  function addStage(newStage: Stage) {
+  const addStage: AddStageSignature = function (newStage) {
     // make sure a stage with this id is not already present
     if (!stages.find((stage) => stage.id === newStage.id)) {
       // Declare a copy of the input object
@@ -72,23 +75,36 @@ export default function Home() {
       };
       setStages([...stages, newStageWithInput]);
     }
-  }
-  function deleteStage(id: string) {
+  };
+  const deleteStage: DeleteStageSignature = function (id) {
     // delete the stage and its children
     setStages(stages.filter((stage) => !stage.id.startsWith(id)));
-  }
+  };
   const stageList = stages.map((stage, i) => (
     <RecipeStage
       item={stage.item}
       IPS={stage.IPS}
       displayUnit={stage.displayUnit}
-      input={stage.input}
       showCancel={i !== 0}
       id={stage.id}
       key={stage.id}
-      addStage={addStage}
       deleteStage={deleteStage}
-    />
+    >
+      {/* Approach of "composition" of children objects: */}
+      {stage.input.map((elem, i) => {
+        return (
+          <RecipeItem
+            item={elem.item}
+            IPS={elem.IPS}
+            displayUnit="IPS"
+            clickable={elem.sub_recipe}
+            id={`${stage.id}-${i}`}
+            key={`${stage.id}-${i}`}
+            addStage={addStage}
+          />
+        );
+      })}
+    </RecipeStage>
   ));
 
   // **** Contents of the site

@@ -4,22 +4,22 @@ import styles from "./RecipeItem.module.css";
 import utilStyles from "../src/app/page.module.css";
 import clsx from "clsx";
 import { RATE_UNITS } from "../domain/Calculations";
-import { Stage } from "../src/app/page";
+import { AddStageSignature } from "../src/app/page";
 
-interface StaticRecipeItemProps<isClickable> {
+interface RecipeItemStaticProps<isClickable> {
   item: string;
   IPS: number;
   displayUnit: keyof typeof RATE_UNITS;
   clickable: isClickable;
 }
-interface ExtendableRecipeItemProps<isClickable>
-  extends StaticRecipeItemProps<isClickable> {
+interface RecipeItemExpandableProps<isClickable>
+  extends RecipeItemStaticProps<isClickable> {
   id: string;
-  addStage: (newStage: Stage) => void;
+  addStage: AddStageSignature;
 }
 type RecipeItemProps<isClickable = boolean> = isClickable extends true
-  ? ExtendableRecipeItemProps<isClickable>
-  : StaticRecipeItemProps<isClickable>;
+  ? RecipeItemExpandableProps<isClickable>
+  : RecipeItemStaticProps<isClickable>;
 
 function RecipeItem(props: RecipeItemProps) {
   // A RecipeItem corresponds to a bundle of {item, quantity, unit} displayed in RecipeStage
