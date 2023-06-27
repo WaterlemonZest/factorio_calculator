@@ -85,6 +85,11 @@ export function toFactories(
   return (IPS * seconds) / (yields * FACTORY_SPEEDS[factory]);
 }
 
+export const RATE_ICONS = {
+  IPS: "/IPS.png",
+  Transport_belt: "/factorio-assets/Transport_belt.png",
+};
+
 export const RATE_UNITS = {
   IPS: 1,
   Transport_belt: 15,

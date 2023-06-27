@@ -36,7 +36,7 @@ function RecipeStage(props: RecipeStageProps) {
       <RecipeItem
         item={props.item}
         IPS={props.IPS}
-        displayUnit="IPS"
+        displayUnit={props.displayUnit}
         clickable={false}
       />
       <div>{toFactories(props.IPS, props.item, "Assembling_machine_1")}</div>

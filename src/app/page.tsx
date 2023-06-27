@@ -3,8 +3,20 @@ import Image from "next/image";
 import utilStyles from "./page.module.css";
 import RecipeStage from "../../components/RecipeStage";
 import RecipeItem from "../../components/RecipeItem";
-import { toIPS, inputFor, toUnit, RATE_UNITS } from "../../domain/Calculations";
+import Popup from "reactjs-popup";
+import popupStyles from "../../components/ChoiceBoxSmall.module.css";
+import ChoiceBoxSmall from "../../components/ChoiceboxSmall";
+import {
+  toIPS,
+  inputFor,
+  toUnit,
+  RATE_UNITS,
+  RATE_ICONS,
+} from "../../domain/Calculations";
 import { useState, ChangeEvent } from "react";
+
+import choiceboxSStyles from "../../components/ChoiceboxSmall.module.css";
+import { text } from "stream/consumers";
 
 export interface Stage {
   item: string;
@@ -14,8 +26,8 @@ export interface Stage {
 }
 const DEFAULT_STAGE0: Stage = {
   item: "Logistic_science_pack",
-  IPS: 10,
-  displayUnit: "IPS",
+  IPS: 15,
+  displayUnit: "Transport_belt",
   id: "0",
 };
 export type AddStageSignature = { (newStage: Stage): void };
@@ -42,11 +54,16 @@ export default function Home() {
     }
     return rescaledStages;
   }
-  function setStage0Unit(newDisplayUnit: keyof typeof RATE_UNITS) {
-    const scale = toIPS(1, newDisplayUnit) / toIPS(1, stages[0].displayUnit);
+  function setStageUnit(
+    stageID: string,
+    newDisplayUnit: keyof typeof RATE_UNITS
+  ) {
+    const oldDisplayUnit = stages.filter((stage) => stage.id === stageID)[0]
+      .displayUnit;
+    const scale = toIPS(1, newDisplayUnit) / toIPS(1, oldDisplayUnit);
     const rescaledStages = rescaleStages(scale);
-    const updatedStages = rescaledStages.map((stage, i) => {
-      if (i === 0) {
+    const updatedStages = rescaledStages.map((stage) => {
+      if (stage.id === stageID) {
         return { ...stage, displayUnit: newDisplayUnit };
       }
       return stage;
@@ -137,32 +154,31 @@ export default function Home() {
                 }}
               />
             </form>
-            {/* @TODO: implement "activated" and "not active" states visually
-            by conditionally applying an appropriate class?
-            Or maybe look up how a similar thing with <a::clicked> is implemented? */}
-            <Image
-              src="/IPS.png"
-              alt="items/s"
-              className={utilStyles.iconClickable}
-              width={targetIconSize}
-              height={targetIconSize}
-              onClick={() => {
-                setStage0Unit("IPS");
-              }}
-            />
-            <Image
-              src="/factorio-assets/Transport_belt.png"
-              alt="Transport belt"
-              className={utilStyles.iconClickable}
-              width={targetIconSize}
-              height={targetIconSize}
-              onClick={() => {
-                setStage0Unit("Transport_belt");
-              }}
-            />
+            {/* @TODO: figure out how to auto close this popup
+            after clicking one of the options in the popup */}
+
+            <Popup
+              trigger={
+                <Image
+                  src={RATE_ICONS[stages[0].displayUnit]}
+                  alt={stages[0].displayUnit}
+                  className={utilStyles.iconClickable}
+                  width={targetIconSize}
+                  height={targetIconSize}
+                />
+              }
+              className={popupStyles.popup}
+              position="bottom center"
+              closeOnDocumentClick
+            >
+              <ChoiceBoxSmall
+                choices={RATE_ICONS}
+                setStageUnit={setStageUnit}
+                stageID={stages[0].id}
+              />
+            </Popup>
           </div>
         </div>
-
         <div className={utilStyles.recipeResults}>
           <div>&nbsp;</div>
           <div>item</div>
