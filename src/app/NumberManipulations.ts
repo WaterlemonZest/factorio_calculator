@@ -5,3 +5,8 @@ export function presentable(value: number) {
   //strip the trailing zeros (and potentially the dot)
   return quantized.toFixed(2).replace(/\.?0*$/, "");
 }
+
+export function presentableInt(value: number) {
+  // round up to the nearest integer
+  return Math.ceil(value).toFixed(0);
+}

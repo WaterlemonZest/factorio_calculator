@@ -6,12 +6,14 @@ import RecipeItem from "../../components/RecipeItem";
 import Popup from "reactjs-popup";
 import unitChoiceStyles from "../../components/UnitChoice.module.css";
 import UnitChoice from "../../components/UnitChoice";
+import FactoryChoice from "../../components/FactoryChoice";
 import {
   toIPS,
   inputFor,
   toUnit,
   RATE_UNITS,
   RATE_ICONS,
+  FACTORY_SPEEDS,
 } from "../../domain/Calculations";
 import { useState, ChangeEvent } from "react";
 
@@ -20,14 +22,26 @@ export interface Stage {
   IPS: number;
   displayUnit: keyof typeof RATE_UNITS;
   id: string;
+  factory: keyof typeof FACTORY_SPEEDS;
 }
 const DEFAULT_STAGE0: Stage = {
   item: "Logistic_science_pack",
   IPS: 15,
   displayUnit: "IPS",
   id: "0",
+  factory: "Assembling_machine_3",
 };
-export type AddStageSignature = { (newStage: Stage): void };
+export type SetFactoryTypeSignature = {
+  (stageID: string, newFactoryType: keyof typeof FACTORY_SPEEDS): void;
+};
+export type AddStageSignature = {
+  (newStage: {
+    item: string;
+    IPS: number;
+    displayUnit: keyof typeof RATE_UNITS;
+    id: string;
+  }): void;
+};
 export type DeleteStageSignature = { (id: string): void };
 export type SetStageUnitSignature = {
   (stage: string, newDisplayUnit: keyof typeof RATE_UNITS): void;
@@ -45,6 +59,7 @@ export default function Home() {
       ),
     },
   ]);
+  const [defaultFactory, setDefaultFactory] = useState("Assembling_machine_3");
 
   function rescaleStages(scale: number) {
     let rescaledStages = [];
@@ -59,6 +74,20 @@ export default function Home() {
     }
     return rescaledStages;
   }
+  const setFactoryType: SetFactoryTypeSignature = function (
+    stageID,
+    newFactoryType
+  ) {
+    setStages(
+      stages.map((stage) => {
+        if (stage.id === stageID) {
+          return { ...stage, factory: newFactoryType };
+        }
+        return stage;
+      })
+    );
+    setDefaultFactory(newFactoryType);
+  };
   const setStageUnit: SetStageUnitSignature = function (
     stageID,
     newDisplayUnit
@@ -116,6 +145,7 @@ export default function Home() {
       const newStageWithInput = {
         ...newStage,
         input: inputFor(newStage.IPS, newStage.item, newStage.displayUnit),
+        factory: defaultFactory,
       };
       setStages([...stages, newStageWithInput]);
     }
@@ -133,6 +163,7 @@ export default function Home() {
       id={stage.id}
       key={stage.id}
       deleteStage={deleteStage}
+      factory={stage.factory}
     >
       <RecipeItem
         item={stage.item}
@@ -142,6 +173,7 @@ export default function Home() {
       >
         <UnitChoice setStageUnit={setStageUnit} stageID={stage.id} />
       </RecipeItem>
+      <FactoryChoice stageID={stage.id} setFactoryType={setFactoryType} />
       {/* Approach of "composition" of children objects: */}
       {stage.input.map((elem, i) => {
         return (
@@ -197,7 +229,6 @@ export default function Home() {
             </form>
             {/* @TODO: figure out how to auto close this popup
             after clicking one of the options in the popup */}
-
             <Popup
               trigger={
                 <Image

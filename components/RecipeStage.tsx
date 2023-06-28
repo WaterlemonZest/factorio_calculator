@@ -1,9 +1,11 @@
 import React, { ReactNode } from "react";
 import Image from "next/image";
+import Popup from "reactjs-popup";
 import utilStyles from "../src/app/page.module.css";
 import styles from "./RecipeStage.module.css";
-import { toFactories } from "../domain/Calculations";
+import { toFactories, FACTORY_ICONS } from "../domain/Calculations";
 import { Stage, DeleteStageSignature } from "../src/app/page";
+import { presentableInt } from "@/app/NumberManipulations";
 
 type RecipeStageProps = Stage & {
   deleteStage: DeleteStageSignature;
@@ -14,6 +16,7 @@ type RecipeStageProps = Stage & {
 function RecipeStage(props: RecipeStageProps) {
   // A RecipeStage effectively corresponds to a row in the table of results
   const cancelSize = 36;
+  const factoryIconSize = 48;
   return (
     <>
       <div>
@@ -33,8 +36,26 @@ function RecipeStage(props: RecipeStageProps) {
         )}
       </div>
       {props.children[0]}
-      <div>{toFactories(props.IPS, props.item, "Assembling_machine_1")}</div>
-      <div className={styles.inputList}>{props.children[1]}</div>
+      <div className={styles.factoryContainer}>
+        <Popup
+          trigger={
+            <Image
+              src={FACTORY_ICONS[props.factory]}
+              alt={props.factory}
+              className={utilStyles.iconClickable}
+              width={factoryIconSize}
+              height={factoryIconSize}
+            />
+          }
+          position="bottom center"
+          closeOnDocumentClick
+        >
+          {props.children[1]}
+        </Popup>
+
+        {presentableInt(toFactories(props.IPS, props.item, props.factory))}
+      </div>
+      <div className={styles.inputList}>{props.children[2]}</div>
     </>
   );
 }
