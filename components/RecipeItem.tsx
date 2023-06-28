@@ -1,29 +1,33 @@
-import React from "react";
+import React, { ReactNode } from "react";
+import Popup from "reactjs-popup";
 import Image from "next/image";
 import styles from "./RecipeItem.module.css";
 import utilStyles from "../src/app/page.module.css";
 import clsx from "clsx";
-import { RATE_UNITS } from "../domain/Calculations";
-import { Stage } from "../src/app/page";
+import { RATE_UNITS, toUnit, RATE_ICONS } from "../domain/Calculations";
+import { AddStageSignature } from "../src/app/page";
 
-interface StaticRecipeItemProps<isClickable> {
+interface RecipeItemStaticProps<isClickable> {
   item: string;
   IPS: number;
   displayUnit: keyof typeof RATE_UNITS;
   clickable: isClickable;
+  children: ReactNode;
 }
-interface ExtendableRecipeItemProps<isClickable>
-  extends StaticRecipeItemProps<isClickable> {
+interface RecipeItemExpandableProps<isClickable>
+  extends RecipeItemStaticProps<isClickable> {
   id: string;
-  addStage: (newStage: Stage) => void;
+  addStage: AddStageSignature;
 }
 type RecipeItemProps<isClickable = boolean> = isClickable extends true
-  ? ExtendableRecipeItemProps<isClickable>
-  : StaticRecipeItemProps<isClickable>;
+  ? RecipeItemExpandableProps<isClickable>
+  : RecipeItemStaticProps<isClickable>;
 
 function RecipeItem(props: RecipeItemProps) {
   // A RecipeItem corresponds to a bundle of {item, quantity, unit} displayed in RecipeStage
   const iconPath = `/factorio-assets/${props.item}.png`;
+  const iconSize = 48;
+  const displayUnitSize = 32;
   function addStage() {
     if (!props.clickable) {
       return <></>;
@@ -31,7 +35,7 @@ function RecipeItem(props: RecipeItemProps) {
     props.addStage({
       item: props.item,
       IPS: props.IPS,
-      displayUnit: "IPS", // @TODO: come up with a way to put here the same unit as for Stage0 for user friendliness
+      displayUnit: props.displayUnit,
       id: props.id,
     });
   }
@@ -45,13 +49,27 @@ function RecipeItem(props: RecipeItemProps) {
         )}
         src={iconPath}
         alt={props.item}
-        width={48}
-        height={48}
+        width={iconSize}
+        height={iconSize}
         onClick={addStage}
       />
-      {/* @TODO: implement changeble display unit */}
-      <p className={styles.quantity}>{props.IPS}</p>
-      <p className={styles.unit}>IPS</p>
+      <p className={styles.quantity}>{toUnit(props.displayUnit, props.IPS)}</p>
+
+      <Popup
+        trigger={
+          <Image
+            src={RATE_ICONS[props.displayUnit]}
+            alt={props.displayUnit}
+            width={displayUnitSize}
+            height={displayUnitSize}
+          />
+        }
+        className={styles.unit}
+        position="bottom center"
+        closeOnDocumentClick
+      >
+        {props.children}
+      </Popup>
     </div>
   );
 }
