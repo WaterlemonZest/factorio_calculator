@@ -58,13 +58,18 @@ export const RECIPES: { [key: string]: Recipe } = {
   },
 };
 
-export function inputFor(IPS: number, item: keyof typeof RECIPES) {
+export function inputFor(
+  IPS: number,
+  item: keyof typeof RECIPES,
+  displayUnit?: keyof typeof RATE_UNITS
+) {
   const yields = RECIPES[item].yields;
   return RECIPES[item].input.map((elem) => {
     return {
       item: elem[0],
       IPS: (IPS / yields) * elem[1],
       sub_recipe: RECIPES.hasOwnProperty(elem[0]),
+      displayUnit: displayUnit ? displayUnit : "IPS",
     };
   });
 }
@@ -85,14 +90,16 @@ export function toFactories(
   return (IPS * seconds) / (yields * FACTORY_SPEEDS[factory]);
 }
 
-export const RATE_ICONS = {
-  IPS: "/IPS.png",
-  Transport_belt: "/factorio-assets/Transport_belt.png",
-};
-
+// @TODO: bundle these objects together into 1
+// and provide methods that will extract the information in the
+// necessary formats
 export const RATE_UNITS = {
   IPS: 1,
   Transport_belt: 15,
+};
+export const RATE_ICONS: Record<string, string> = {
+  IPS: "/IPS.png",
+  Transport_belt: "/factorio-assets/Transport_belt.png",
 };
 
 export function toIPS(quantity: number, unit: keyof typeof RATE_UNITS) {
