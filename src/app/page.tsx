@@ -188,6 +188,7 @@ export default function Home() {
               <input
                 type="number"
                 className={utilStyles.recipeDemandQuantity}
+                min="0"
                 defaultValue={toUnit(stages[0].displayUnit, stages[0].IPS)}
                 onChange={(e) => {
                   setStage0Quantity(e);

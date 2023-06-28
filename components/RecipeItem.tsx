@@ -6,6 +6,7 @@ import utilStyles from "../src/app/page.module.css";
 import clsx from "clsx";
 import { RATE_UNITS, toUnit, RATE_ICONS } from "../domain/Calculations";
 import { AddStageSignature } from "../src/app/page";
+import { presentable } from "@/app/NumberManipulations";
 
 interface RecipeItemStaticProps<isClickable> {
   item: string;
@@ -53,7 +54,9 @@ function RecipeItem(props: RecipeItemProps) {
         height={iconSize}
         onClick={addStage}
       />
-      <p className={styles.quantity}>{toUnit(props.displayUnit, props.IPS)}</p>
+      <p className={styles.quantity}>
+        {presentable(toUnit(props.displayUnit, props.IPS))}
+      </p>
 
       <Popup
         trigger={
