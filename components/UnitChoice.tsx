@@ -31,7 +31,7 @@ function UnitChoice(props: UnitChoiceProps) {
     );
   }
 
-  return <div className={styles.iconFlex}>{choiceList}</div>;
+  return <div>{choiceList}</div>;
 }
 
 export default UnitChoice;

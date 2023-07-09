@@ -7,4 +7,12 @@
 .factoryContainer {
   display: grid;
   grid-template-rows: 2fr 1fr;
+  align-items: center;
+  justify-items: center;
+}
+
+.cancelContainer {
+  display: flex;
+  flex-flow: column wrap;
+  justify-content: center;
 }
