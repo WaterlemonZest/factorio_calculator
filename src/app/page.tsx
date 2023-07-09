@@ -32,7 +32,7 @@ export interface Stage {
   factory: keyof typeof FACTORY_SPEEDS;
 }
 const DEFAULT_STAGE0: Stage = {
-  item: "Logistic_science_pack",
+  item: "Automation_science_pack",
   IPS: 15,
   displayUnit: "IPS",
   id: "0",
