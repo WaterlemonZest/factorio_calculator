@@ -19,7 +19,7 @@ function RecipeStage(props: RecipeStageProps) {
   const factoryIconSize = 48;
   return (
     <>
-      <div>
+      <div className={styles.cancelContainer}>
         {props.showCancel ? (
           <Image
             src="/Cross.png"

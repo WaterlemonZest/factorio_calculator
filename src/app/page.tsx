@@ -1,6 +1,7 @@
 "use client";
 import Image from "next/image";
 import utilStyles from "./page.module.css";
+import RecipeItemStyles from "../../components/RecipeItem.module.css";
 import RecipeStage from "../../components/RecipeStage";
 import RecipeItem from "../../components/RecipeItem";
 import Popup from "reactjs-popup";
@@ -16,6 +17,7 @@ import {
   FACTORY_SPEEDS,
 } from "../../domain/Calculations";
 import { useState, ChangeEvent } from "react";
+import clsx from "clsx";
 
 export interface Stage {
   item: string;
@@ -201,7 +203,15 @@ export default function Home() {
   return (
     <main className={utilStyles.main}>
       <div className={utilStyles.endbars}>
-        <p>Top endbar - fixed</p>
+        <h1>
+          <Image
+            src="/factorio-assets/Factorio_logo.png"
+            alt="Factorio logo"
+            width={60}
+            height={60}
+          />
+          Factorio production rate calculator
+        </h1>
       </div>
 
       <div className={utilStyles.pageContent}>
@@ -212,7 +222,7 @@ export default function Home() {
             <Image
               src={`/factorio-assets/${stages[0].item}.png`}
               alt={stages[0].item}
-              className={`${utilStyles.recipeDemandIcon} ${utilStyles.iconClickable}`}
+              className={clsx(RecipeItemStyles.icon, utilStyles.iconClickable)}
               width={targetIconSize}
               height={targetIconSize}
             />
@@ -254,10 +264,6 @@ export default function Home() {
           <div>input</div>
           {stageList}
         </div>
-      </div>
-
-      <div className={utilStyles.endbars}>
-        <p>Bottom endbar - fixed</p>
       </div>
     </main>
   );
