@@ -17,11 +17,12 @@ function UnitChoice(props: UnitChoiceProps) {
   // because now for the life of me I cannot figure out
   // how to apply .map to an object
   let choiceList = [];
-  for (let name in RATE_ICONS) {
+  let options = { ...RATE_ICONS, IPS: "/IPS_bg.png" };
+  for (let name in options) {
     choiceList.push(
       <Image
         key={name}
-        src={RATE_ICONS[name]}
+        src={options[name]}
         alt={name}
         onClick={() => props.setStageUnit(props.stageID, name)}
         width={unitChoiceSize}

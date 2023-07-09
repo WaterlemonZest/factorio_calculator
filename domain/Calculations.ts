@@ -2,6 +2,7 @@ interface Recipe {
   yields: number;
   seconds: number;
   input: [string, number][];
+  category: string;
 }
 
 export const RECIPES: { [key: string]: Recipe } = {
@@ -12,11 +13,13 @@ export const RECIPES: { [key: string]: Recipe } = {
       ["Iron_gear_wheel", 1],
       ["Copper_plate", 1],
     ],
+    category: "Science",
   },
   Iron_gear_wheel: {
     yields: 1,
     seconds: 0.5,
     input: [["Iron_plate", 2]],
+    category: "Components",
   },
   Transport_belt: {
     yields: 2,
@@ -25,11 +28,13 @@ export const RECIPES: { [key: string]: Recipe } = {
       ["Iron_gear_wheel", 1],
       ["Iron_plate", 1],
     ],
+    category: "Logistics",
   },
   Copper_cable: {
     yields: 2,
     seconds: 0.5,
     input: [["Copper_plate", 1]],
+    category: "Components",
   },
   Electronic_circuit: {
     yields: 1,
@@ -38,6 +43,7 @@ export const RECIPES: { [key: string]: Recipe } = {
       ["Copper_cable", 3],
       ["Iron_plate", 1],
     ],
+    category: "Components",
   },
   Inserter: {
     yields: 1,
@@ -47,6 +53,7 @@ export const RECIPES: { [key: string]: Recipe } = {
       ["Iron_gear_wheel", 1],
       ["Iron_plate", 1],
     ],
+    category: "Logistics",
   },
   Logistic_science_pack: {
     yields: 1,
@@ -55,6 +62,7 @@ export const RECIPES: { [key: string]: Recipe } = {
       ["Inserter", 1],
       ["Transport_belt", 1],
     ],
+    category: "Science",
   },
 };
 

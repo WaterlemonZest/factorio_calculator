@@ -55,6 +55,7 @@
   grid-column-gap: 3px;
   background-color: var(--window-bg-RGB);
   border-radius: var(--corner-radius);
+  z-index: 0;
 }
 
 /* every other row*/
