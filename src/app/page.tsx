@@ -4,6 +4,10 @@ import utilStyles from "./page.module.css";
 import RecipeItemStyles from "../../components/RecipeItem.module.css";
 import RecipeStage from "../../components/RecipeStage";
 import RecipeItem from "../../components/RecipeItem";
+import ItemChoiceDialog, {
+  showItemChoice,
+  closeItemChoice,
+} from "../../components/ItemChoiceDialog";
 import Popup from "reactjs-popup";
 import unitChoiceStyles from "../../components/UnitChoice.module.css";
 import UnitChoice from "../../components/UnitChoice";
@@ -15,6 +19,7 @@ import {
   RATE_UNITS,
   RATE_ICONS,
   FACTORY_SPEEDS,
+  RECIPES,
 } from "../../domain/Calculations";
 import { useState, ChangeEvent } from "react";
 import clsx from "clsx";
@@ -27,11 +32,14 @@ export interface Stage {
   factory: keyof typeof FACTORY_SPEEDS;
 }
 const DEFAULT_STAGE0: Stage = {
-  item: "Logistic_science_pack",
+  item: "Automation_science_pack",
   IPS: 15,
   displayUnit: "IPS",
   id: "0",
   factory: "Assembling_machine_3",
+};
+export type SetTargetItemSignature = {
+  (targetItem: string): void;
 };
 export type SetFactoryTypeSignature = {
   (stageID: string, newFactoryType: keyof typeof FACTORY_SPEEDS): void;
@@ -76,6 +84,16 @@ export default function Home() {
     }
     return rescaledStages;
   }
+  const setTargetItem: SetTargetItemSignature = function (targetItem) {
+    setStages([
+      {
+        ...stages[0],
+        item: targetItem,
+        input: inputFor(stages[0].IPS, targetItem, stages[0].displayUnit),
+      },
+    ]);
+    closeItemChoice();
+  };
   const setFactoryType: SetFactoryTypeSignature = function (
     stageID,
     newFactoryType
@@ -218,13 +236,14 @@ export default function Home() {
         <div className={utilStyles.recipeDemand}>
           <h1>TARGET PRODUCTION</h1>
           <div className={utilStyles.recipeDemandInput}>
-            {/* @TODO: implement UI to change the target item */}
+            <ItemChoiceDialog setTargetItem={setTargetItem} />
             <Image
               src={`/factorio-assets/${stages[0].item}.png`}
               alt={stages[0].item}
               className={clsx(RecipeItemStyles.icon, utilStyles.iconClickable)}
               width={targetIconSize}
               height={targetIconSize}
+              onClick={showItemChoice}
             />
             <form>
               <input
