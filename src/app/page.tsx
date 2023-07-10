@@ -12,24 +12,16 @@ import Popup from "reactjs-popup";
 import unitChoiceStyles from "../../components/UnitChoice.module.css";
 import UnitChoice from "../../components/UnitChoice";
 import FactoryChoice from "../../components/FactoryChoice";
-import {
-  toIPS,
-  inputFor,
-  toUnit,
-  RATE_UNITS,
-  RATE_ICONS,
-  FACTORY_SPEEDS,
-  RECIPES,
-} from "../../domain/Calculations";
+import { toIPS, inputFor, toUnit, RATE_ICONS } from "../../domain/Calculations";
 import { useState, ChangeEvent } from "react";
 import clsx from "clsx";
 
 export interface Stage {
   item: string;
   IPS: number;
-  displayUnit: keyof typeof RATE_UNITS;
+  displayUnit: string;
   id: string;
-  factory: keyof typeof FACTORY_SPEEDS;
+  factory: string;
 }
 const DEFAULT_STAGE0: Stage = {
   item: "Automation_science_pack",
@@ -48,13 +40,13 @@ export type AddStageSignature = {
   (newStage: {
     item: string;
     IPS: number;
-    displayUnit: keyof typeof RATE_UNITS;
+    displayUnit: string;
     id: string;
   }): void;
 };
 export type DeleteStageSignature = { (id: string): void };
 export type SetStageUnitSignature = {
-  (stage: string, newDisplayUnit: keyof typeof RATE_UNITS): void;
+  (stage: string, newDisplayUnit: string): void;
 };
 
 export default function Home() {

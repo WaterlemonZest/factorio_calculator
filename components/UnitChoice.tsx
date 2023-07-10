@@ -17,7 +17,7 @@ function UnitChoice(props: UnitChoiceProps) {
   // because now for the life of me I cannot figure out
   // how to apply .map to an object
   let choiceList = [];
-  let options = { ...RATE_ICONS, IPS: "/IPS_bg.png" };
+  let options: Record<string, string> = { ...RATE_ICONS, IPS: "/IPS_bg.png" };
   for (let name in options) {
     choiceList.push(
       <Image

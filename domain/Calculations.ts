@@ -321,11 +321,7 @@ export const RECIPES: { [key: string]: Recipe } = {
   },
 };
 
-export function inputFor(
-  IPS: number,
-  item: keyof typeof RECIPES,
-  displayUnit?: keyof typeof RATE_UNITS
-) {
+export function inputFor(IPS: number, item: string, displayUnit?: string) {
   const yields = RECIPES[item].yields;
   return RECIPES[item].input.map((elem) => {
     return {
@@ -337,7 +333,7 @@ export function inputFor(
   });
 }
 
-export const FACTORY_SPEEDS = {
+export const FACTORY_SPEEDS: Record<string, number> = {
   Assembling_machine_1: 0.5,
   Assembling_machine_2: 0.75,
   Assembling_machine_3: 1.25,
@@ -348,11 +344,7 @@ export const FACTORY_ICONS: Record<string, string> = {
   Assembling_machine_3: "/factorio-assets/Assembling_machine_3.png",
 };
 
-export function toFactories(
-  IPS: number,
-  item: keyof typeof RECIPES,
-  factory: keyof typeof FACTORY_SPEEDS
-) {
+export function toFactories(IPS: number, item: string, factory: string) {
   const yields = RECIPES[item].yields;
   const seconds = RECIPES[item].seconds;
   return (IPS * seconds) / (yields * FACTORY_SPEEDS[factory]);
@@ -361,7 +353,7 @@ export function toFactories(
 // @TODO: bundle these objects together into 1
 // and provide methods that will extract the information in the
 // necessary formats
-export const RATE_UNITS = {
+export const RATE_UNITS: Record<string, number> = {
   IPS: 1,
   Transport_belt: 15,
   Fast_transport_belt: 30,
@@ -374,9 +366,9 @@ export const RATE_ICONS: Record<string, string> = {
   Express_transport_belt: "/factorio-assets/Express_transport_belt.png",
 };
 
-export function toIPS(quantity: number, unit: keyof typeof RATE_UNITS) {
+export function toIPS(quantity: number, unit: string) {
   return quantity * RATE_UNITS[unit];
 }
-export function toUnit(unit: keyof typeof RATE_UNITS, IPS: number) {
+export function toUnit(unit: string, IPS: number) {
   return IPS / RATE_UNITS[unit];
 }
