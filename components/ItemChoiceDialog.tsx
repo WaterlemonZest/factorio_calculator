@@ -10,7 +10,7 @@ type ItemChoiceDialogProps = {
 export function showItemChoice() {
   const dialog = document.getElementById("itemChoice");
   if (!dialog || !(dialog instanceof HTMLDialogElement)) return;
-  dialog.show();
+  dialog.showModal();
 }
 export function closeItemChoice() {
   const dialog = document.getElementById("itemChoice");

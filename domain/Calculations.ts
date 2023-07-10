@@ -126,7 +126,7 @@ export const RECIPES: { [key: string]: Recipe } = {
     yields: 1,
     seconds: 6,
     input: [
-      ["Copper_wire", 4],
+      ["Copper_cable", 4],
       ["Electronic_circuit", 2],
       ["Plastic_bar", 2],
     ],
