@@ -42,7 +42,7 @@ export type SetTargetItemSignature = {
   (targetItem: string): void;
 };
 export type SetFactoryTypeSignature = {
-  (stageID: string, newFactoryType: keyof typeof FACTORY_SPEEDS): void;
+  (stageID: string, newFactoryType: string): void;
 };
 export type AddStageSignature = {
   (newStage: {

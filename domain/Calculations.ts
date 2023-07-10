@@ -342,7 +342,7 @@ export const FACTORY_SPEEDS = {
   Assembling_machine_2: 0.75,
   Assembling_machine_3: 1.25,
 };
-export const FACTORY_ICONS = {
+export const FACTORY_ICONS: Record<string, string> = {
   Assembling_machine_1: "/factorio-assets/Assembling_machine_1.png",
   Assembling_machine_2: "/factorio-assets/Assembling_machine_2.png",
   Assembling_machine_3: "/factorio-assets/Assembling_machine_3.png",
