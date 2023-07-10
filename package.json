@@ -1,5 +1,4 @@
 {
-  "homepage": "http://WaterlemonZest.github.io/factorio_calculator",
   "name": "factorio_calculator",
   "version": "0.1.0",
   "private": true,
@@ -7,8 +6,6 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d .next",
     "lint": "next lint"
   },
   "dependencies": {
