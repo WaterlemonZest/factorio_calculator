@@ -215,8 +215,7 @@ export default function Home() {
       <div className={utilStyles.endbars}>
         <h1>
           <Image
-            /*src="./factorio-assets/Factorio_logo.png"*/
-            src="/factorio-assets/Factorio_logo.png"
+            src="./factorio-assets/Factorio_logo.png"
             alt="Factorio logo"
             width={60}
             height={60}
