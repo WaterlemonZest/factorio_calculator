@@ -17,7 +17,7 @@ function FactoryChoice(props: FactoryChoiceProps) {
   // because now for the life of me I cannot figure out
   // how to apply .map to an object
   let choiceList = [];
-  for (let name in Object.keys(FACTORY_ICONS)) {
+  for (let name in FACTORY_ICONS) {
     choiceList.push(
       <Image
         key={name}
