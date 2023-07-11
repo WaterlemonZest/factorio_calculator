@@ -3,6 +3,7 @@ import Image from "next/image";
 import utilStyles from "@/app/page.module.css";
 import { FACTORY_ICONS } from "../domain/Calculations";
 import { SetFactoryTypeSignature } from "@/app/page";
+import { imageAsset } from "@/app/EnvFunctions";
 
 type FactoryChoiceProps = {
   setFactoryType: SetFactoryTypeSignature;
@@ -21,7 +22,7 @@ function FactoryChoice(props: FactoryChoiceProps) {
     choiceList.push(
       <Image
         key={name}
-        src={FACTORY_ICONS[name]}
+        src={imageAsset(FACTORY_ICONS[name])}
         alt={name}
         onClick={() => props.setFactoryType(props.stageID, name)}
         width={factoryChoiceSize}

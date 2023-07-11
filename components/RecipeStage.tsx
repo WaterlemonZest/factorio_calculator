@@ -6,6 +6,7 @@ import styles from "./RecipeStage.module.css";
 import { toFactories, FACTORY_ICONS } from "../domain/Calculations";
 import { Stage, DeleteStageSignature } from "../src/app/page";
 import { presentableInt } from "@/app/NumberManipulations";
+import { imageAsset } from "@/app/EnvFunctions";
 
 type RecipeStageProps = Stage & {
   deleteStage: DeleteStageSignature;
@@ -22,7 +23,7 @@ function RecipeStage(props: RecipeStageProps) {
       <div className={styles.cancelContainer}>
         {props.showCancel ? (
           <Image
-            src="/Cross.png"
+            src={imageAsset("/Cross.png")}
             alt="Delete"
             className={utilStyles.iconClickable}
             width={cancelSize}
@@ -40,7 +41,7 @@ function RecipeStage(props: RecipeStageProps) {
         <Popup
           trigger={
             <Image
-              src={FACTORY_ICONS[props.factory]}
+              src={imageAsset(FACTORY_ICONS[props.factory])}
               alt={props.factory}
               className={utilStyles.iconClickable}
               width={factoryIconSize}

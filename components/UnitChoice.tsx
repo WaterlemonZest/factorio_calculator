@@ -3,6 +3,7 @@ import styles from "./UnitChoice.module.css";
 import utilStyles from "@/app/page.module.css";
 import { RATE_ICONS } from "../domain/Calculations";
 import { SetStageUnitSignature } from "@/app/page";
+import { imageAsset } from "@/app/EnvFunctions";
 
 type UnitChoiceProps = {
   setStageUnit: SetStageUnitSignature;
@@ -22,7 +23,7 @@ function UnitChoice(props: UnitChoiceProps) {
     choiceList.push(
       <Image
         key={name}
-        src={options[name]}
+        src={imageAsset(options[name])}
         alt={name}
         onClick={() => props.setStageUnit(props.stageID, name)}
         width={unitChoiceSize}

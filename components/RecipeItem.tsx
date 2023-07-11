@@ -7,6 +7,7 @@ import clsx from "clsx";
 import { RATE_UNITS, toUnit, RATE_ICONS } from "../domain/Calculations";
 import { AddStageSignature } from "../src/app/page";
 import { presentable } from "@/app/NumberManipulations";
+import { imageAsset } from "@/app/EnvFunctions";
 
 interface RecipeItemStaticProps<isClickable> {
   item: string;
@@ -26,7 +27,7 @@ type RecipeItemProps<isClickable = boolean> = isClickable extends true
 
 function RecipeItem(props: RecipeItemProps) {
   // A RecipeItem corresponds to a bundle of {item, quantity, unit} displayed in RecipeStage
-  const iconPath = `/factorio-assets/${props.item}.png`;
+  const iconPath = `./factorio-assets/${props.item}.png`;
   const iconSize = 48;
   const displayUnitSize = 32;
   function addStage() {
@@ -48,7 +49,7 @@ function RecipeItem(props: RecipeItemProps) {
           styles.icon,
           props.clickable && utilStyles.iconClickable
         )}
-        src={iconPath}
+        src={imageAsset(iconPath)}
         alt={props.item}
         width={iconSize}
         height={iconSize}
@@ -61,7 +62,7 @@ function RecipeItem(props: RecipeItemProps) {
       <Popup
         trigger={
           <Image
-            src={RATE_ICONS[props.displayUnit]}
+            src={imageAsset(RATE_ICONS[props.displayUnit])}
             alt={props.displayUnit}
             width={displayUnitSize}
             height={displayUnitSize}

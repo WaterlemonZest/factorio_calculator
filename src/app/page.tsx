@@ -14,6 +14,7 @@ import UnitChoice from "../../components/UnitChoice";
 import FactoryChoice from "../../components/FactoryChoice";
 import { toIPS, inputFor, toUnit, RATE_ICONS } from "../../domain/Calculations";
 import { useState, ChangeEvent } from "react";
+import { imageAsset } from "./EnvFunctions";
 import clsx from "clsx";
 
 export interface Stage {
@@ -215,7 +216,7 @@ export default function Home() {
       <div className={utilStyles.endbars}>
         <h1>
           <Image
-            src="./factorio-assets/Factorio_logo.png"
+            src={imageAsset("/factorio-assets/Factorio_logo.png")}
             alt="Factorio logo"
             width={60}
             height={60}
@@ -230,7 +231,7 @@ export default function Home() {
           <div className={utilStyles.recipeDemandInput}>
             <ItemChoiceDialog setTargetItem={setTargetItem} />
             <Image
-              src={`/factorio-assets/${stages[0].item}.png`}
+              src={imageAsset(`/factorio-assets/${stages[0].item}.png`)}
               alt={stages[0].item}
               className={clsx(RecipeItemStyles.icon, utilStyles.iconClickable)}
               width={targetIconSize}
@@ -253,7 +254,7 @@ export default function Home() {
             <Popup
               trigger={
                 <Image
-                  src={RATE_ICONS[stages[0].displayUnit]}
+                  src={imageAsset(RATE_ICONS[stages[0].displayUnit])}
                   alt={stages[0].displayUnit}
                   className={utilStyles.iconClickable}
                   width={targetIconSize}

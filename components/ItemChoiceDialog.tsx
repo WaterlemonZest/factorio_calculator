@@ -2,6 +2,7 @@ import { RECIPES } from "../domain/Calculations";
 import styles from "./ItemChoiceDialog.module.css";
 import Image from "next/image";
 import { SetTargetItemSignature } from "@/app/page";
+import { imageAsset } from "@/app/EnvFunctions";
 
 type ItemChoiceDialogProps = {
   setTargetItem: SetTargetItemSignature;
@@ -36,7 +37,7 @@ export default function ItemChoiceDialog(props: ItemChoiceDialogProps) {
     for (const recipeName of categorized[categoryName]) {
       imageSeries.push(
         <Image
-          src={`/factorio-assets/${recipeName}.png`}
+          src={imageAsset(`/factorio-assets/${recipeName}.png`)}
           alt={recipeName}
           width={iconSize}
           height={iconSize}
